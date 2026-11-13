@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UnitSpec" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/unit_spec.gd" id="1"]
+[ext_resource type="Resource" path="res://data/weapon_6.tres" id="2"]
+[resource]
+script = ExtResource("1")
+title = "Light Truck"
+hp = 180
+speed = 180
+damage = 0
+reach = 0
+reload = 1
+armor = 3
+supply = 140
+manpower = 3
+fuel = 0
+infantry = false
+sight = 380
+cargo_capacity = 2
+weapon = ExtResource("2")

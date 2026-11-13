@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Enlarged Fuel Tank"
 description = "Reload × 0.7"
-manpower = 80
+supply = 80
 fuel = 20
 stat = "reload"
 factor = 0.7

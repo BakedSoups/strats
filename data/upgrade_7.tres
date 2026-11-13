@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Rangefinder"
 description = "Reach × 1.25"
-manpower = 90
+supply = 90
 fuel = 20
 stat = "reach"
 factor = 1.25

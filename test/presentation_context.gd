@@ -7,6 +7,7 @@ func _initialize() -> void:
 	game=load("res://scenes/main.tscn").instantiate(); root.add_child(game)
 	call_deferred("begin")
 func begin() -> void:
+	load("res://test/fixtures.gd").combined(game)
 	game.start_match(); game.camera_pos=Vector2(950,900); game.zoom_level=.65
 func _process(delta: float) -> bool:
 	time+=delta

@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Rocket Pods"
 description = "Damage × 1.8"
-manpower = 140
+supply = 140
 fuel = 40
 stat = "damage"
 factor = 1.8

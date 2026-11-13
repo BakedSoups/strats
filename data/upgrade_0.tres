@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Improved Rifles"
 description = "Damage × 1.35"
-manpower = 80
+supply = 80
 fuel = 0
 stat = "damage"
 factor = 1.35

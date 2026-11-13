@@ -13,7 +13,13 @@ func defaults() -> Dictionary:
 	return {"master":80.0,"music":70.0,"effects":85.0,"resolution":1,"fullscreen":false,"camera_speed":650.0,"zoom_sensitivity":1.0,"edge_scrolling":false}
 func load_saved() -> void:
 	var config: ConfigFile = ConfigFile.new()
-	if config.load(storage_path)==OK:
+	var loaded: Error = config.load(storage_path)
+	var migrated: bool = false
+	if loaded!=OK and storage_path==PATH:
+		var legacy_path: String = OS.get_user_data_dir().get_base_dir().path_join("STRATS — Territory & Steel/settings.cfg")
+		loaded=config.load(legacy_path)
+		migrated=loaded==OK
+	if loaded==OK:
 		for key: String in values:
 			var candidate: Variant = config.get_value("settings",key,values[key])
 			if typeof(candidate)==typeof(values[key]) or (candidate is int and values[key] is float): values[key]=candidate
@@ -27,6 +33,7 @@ func load_saved() -> void:
 			var legacy: Dictionary = {"camera_up":KEY_W,"camera_down":KEY_S,"camera_left":KEY_A,"camera_right":KEY_D,"attack_move":KEY_Q,"stop":KEY_X,"retreat":KEY_R}
 			bindings=DEFAULT_KEYS.duplicate() if restored==legacy else restored
 	normalize()
+	if migrated: save()
 func normalize() -> void:
 	for key: String in ["master","music","effects"]: values[key]=clampf(float(values[key]),0,100)
 	values.resolution=clampi(int(values.resolution),0,RESOLUTIONS.size()-1)
@@ -67,9 +74,9 @@ func apply(display: bool = true) -> void:
 func key_label(action: String) -> String:
 	return OS.get_keycode_string(bindings[action])
 func allowed_key(code: int) -> bool:
-	return code>=KEY_A and code<=KEY_Z or code in [KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT,KEY_SPACE,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,KEY_F12]
+	return (code>=KEY_A and code<=KEY_Z and code not in [KEY_G,KEY_M]) or code in [KEY_UP,KEY_DOWN,KEY_LEFT,KEY_RIGHT,KEY_SPACE,KEY_F1,KEY_F2,KEY_F3,KEY_F4,KEY_F5,KEY_F6,KEY_F7,KEY_F8,KEY_F9,KEY_F10,KEY_F11,KEY_F12]
 func conflict(action: String, code: int, proposed: Dictionary) -> String:
-	if not allowed_key(code): return "Use a letter, arrow, Space, or F1–F12. Esc and numbers are reserved."
+	if not allowed_key(code): return "Use a letter, arrow, Space, or F1–F12. Esc, G, M and numbers are reserved."
 	for other: String in proposed:
 		if other!=action and proposed[other]==code: return "Already used by "+ACTION_NAMES[other]+". Choose another key."
 	return ""

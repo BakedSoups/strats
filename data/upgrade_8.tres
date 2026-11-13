@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Reinforced Armor"
 description = "Armor × 1.5"
-manpower = 100
+supply = 100
 fuel = 35
 stat = "armor"
 factor = 1.5

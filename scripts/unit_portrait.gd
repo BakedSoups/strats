@@ -2,6 +2,7 @@ class_name UnitPortrait
 extends Control
 var kind: int = 0
 var building: bool = false
+var building_kind: int = 0
 var tint: Color = Color("53b8ed")
 var clock: float = 0
 func _ready() -> void:
@@ -17,7 +18,15 @@ func _draw() -> void:
 		draw_rect(Rect2(-31,-24,62,48),ink)
 		draw_rect(Rect2(-27,-20,54,40),tint.darkened(.15))
 		draw_rect(Rect2(-18,-12,36,24),tint)
-		draw_line(Vector2(-35,-28),Vector2(35,-28),tint,4)
+		match building_kind:
+			0: draw_line(Vector2(-25,-32),Vector2(-25,23),Color("dfebdf"),4)
+			1:
+				for x in [-15,0,15]: draw_circle(Vector2(x,0),5,ink)
+			2:
+				draw_line(Vector2(-20,-15),Vector2(20,15),ink,6); draw_line(Vector2(-20,15),Vector2(20,-15),ink,6)
+			3: draw_rect(Rect2(-16,-6,32,25),ink)
+			4: draw_string(ThemeDB.fallback_font,Vector2(-12,12),"H",HORIZONTAL_ALIGNMENT_LEFT,-1,32,ink)
+			5: draw_circle(Vector2.ZERO,13,ink)
 	elif kind in [9,10]:
 		draw_line(Vector2(-12,0),Vector2(-39,0),ink,10)
 		draw_style_box(rounded(tint),Rect2(-24,-14,54,28))
@@ -27,14 +36,23 @@ func _draw() -> void:
 		draw_line(-rotor,rotor,Color("ccddd2"),3,true)
 		draw_line(-rotor.orthogonal(),rotor.orthogonal(),Color("ccddd2"),3,true)
 		draw_circle(Vector2.ZERO,5,ink)
-	elif kind<=4:
+	elif kind<=4 or kind==12:
 		for offset: Vector2 in [Vector2(-17,14),Vector2(-17,-14)]:
 			draw_circle(offset,9,ink); draw_circle(offset,6,tint.darkened(.2))
 		draw_circle(Vector2.ZERO,19,ink); draw_circle(Vector2.ZERO,15,tint)
 		draw_line(Vector2(4,0),Vector2(37,0),ink,12 if kind in [1,3] else 9)
 		draw_line(Vector2(6,0),Vector2(34,0),Color("b7c8c1"),5)
+		if kind==12: draw_arc(Vector2.ZERO,24,0,TAU,24,Color("ffe0a1"),3,true)
 		if kind==2: draw_line(Vector2(-5,-8),Vector2(5,8),Color("ffe0a1"),4)
 		if kind==4: draw_circle(Vector2.ZERO,10,Color("c1ccc2"))
+	elif kind in [6,13]:
+		for wheel in [Vector2(-20,-20),Vector2(20,-20),Vector2(-20,20),Vector2(20,20)]: draw_rect(Rect2(wheel-Vector2(7,5),Vector2(14,10)),ink)
+		draw_rect(Rect2(-31,-17,62,34),ink); draw_rect(Rect2(-27,-13,54,26),tint)
+		if kind==13:
+			draw_rect(Rect2(-24,-10,28,20),ink); draw_rect(Rect2(13,-10,7,20),Color("b7e9e6"))
+		else:
+			draw_circle(Vector2.ZERO,10,ink); draw_line(Vector2.ZERO,Vector2(36,0),ink,5)
+			draw_line(Vector2(-18,-8),Vector2(-25,-32),Color("b7e9e6"),2)
 	else:
 		draw_rect(Rect2(-31,-23,62,46),ink)
 		draw_rect(Rect2(-27,-18,54,36),tint)

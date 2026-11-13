@@ -48,7 +48,7 @@ func verify() -> void:
 	menu.begin_rebind("attack_move"); menu._input(key)
 	menu.apply_draft()
 	assert(game.preferences.values.camera_speed==1100)
-	assert(game.command_buttons[1].text.contains("[E]"))
+	assert(game.controls_hint.text.contains("[E] fire"))
 	menu.close_menu()
 	game._unhandled_input(key)
 	assert(not game.attack_mode)

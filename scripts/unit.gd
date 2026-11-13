@@ -24,6 +24,12 @@ var retreating: bool = false
 var attack_move: bool = true
 var cargo: Array[CombatUnit] = []
 var loaded: bool = false
+var path: PackedVector2Array = []
+var path_goal: Vector2 = Vector2.INF
+var nav_revision: int = -1
+var ability_timers: Dictionary = {"grenade":0.0,"mortar":0.0}
+var repair_unit: CombatUnit
+var repair_building: int = -1
 var status: String = "Defending"
 func _init(s: UnitSpec, k: int, t: int, at: Vector2) -> void:
 	spec = s
@@ -32,8 +38,9 @@ func _init(s: UnitSpec, k: int, t: int, at: Vector2) -> void:
 	pos = at
 	goal = at
 	hp = s.hp
-	stats = {"hp":s.hp,"speed":s.speed,"damage":s.damage,"reach":s.reach,"reload":s.reload,"armor":s.armor,"setup":s.weapon.setup_time,"repair":12.0}
+	stats = {"hp":s.hp,"speed":s.speed,"damage":s.damage,"reach":s.reach,"reload":s.reload,"armor":s.armor,"setup":s.weapon.setup_time,"repair":12.0,"sight":s.sight,"strike_damage":48.0,"strike_radius":85.0}
 func command(to: Vector2, queued: bool = false, aggressive: bool = true) -> void:
+	if not queued: repair_unit=null; repair_building=-1
 	if queued:
 		orders.append(to)
 	else:

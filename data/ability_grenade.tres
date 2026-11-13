@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AbilitySpec" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/ability_spec.gd" id="1"]
+[resource]
+script = ExtResource("1")
+title = "Frag Grenade"
+supply = 20
+cooldown = 18.0
+reach = 220.0
+damage = 50.0
+radius = 80.0
+count = 1

@@ -10,6 +10,7 @@ func click(at: Vector2) -> void:
 	root.push_input(event,true)
 func verify() -> void:
 	game=load("res://scenes/main.tscn").instantiate(); root.add_child(game)
+	load("res://test/fixtures.gd").combined(game)
 	game.start_match(); game.set_process(false)
 	await process_frame
 	click(game.base_grid.get_child(0).get_global_rect().get_center())
@@ -20,7 +21,7 @@ func verify() -> void:
 	click(game.selection_row.get_child(1).get_global_rect().get_center())
 	await process_frame
 	assert(game.active==game.units[1])
-	game.field.money[0]=1000
+	game.field.supply[0]=1000
 	click(game.upgrade_buttons[0].get_global_rect().get_center())
 	await process_frame
 	assert(0 in game.active.purchased)

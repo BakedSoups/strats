@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Incendiary Mixture"
 description = "Damage × 1.4"
-manpower = 110
+supply = 110
 fuel = 30
 stat = "damage"
 factor = 1.4

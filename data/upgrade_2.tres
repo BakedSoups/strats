@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Extended Belt"
 description = "Reload × 0.7"
-manpower = 90
+supply = 90
 fuel = 0
 stat = "reload"
 factor = 0.7

@@ -5,14 +5,15 @@ func verify() -> void:
 	seed(42)
 	var game: Node = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
+	load("res://test/fixtures.gd").combined(game)
 	game.start_match()
 	game.set_process(false)
 	var u: CombatUnit = game.units[0]
-	var before: float = game.field.money[0]
+	var before: float = game.field.supply[0]
 	var original: float = u.stats.damage
 	assert(game.buy_upgrade(u,0))
 	assert(u.stats.damage>original)
-	assert(game.field.money[0]==before-game.upgrades[0].manpower)
+	assert(game.field.supply[0]==before-game.upgrades[0].supply)
 	assert(not game.buy_upgrade(u,0))
 	u.pos=game.field.points[0].pos
 	u.goal=u.pos
@@ -43,14 +44,15 @@ func verify() -> void:
 	assert(not u.loaded)
 	var engineer: CombatUnit = game.spawn(2,0,Vector2(700,700))
 	game.active=engineer
-	game.field.money[0]=1000; game.field.fuel[0]=500
+	game.field.supply[0]=1000; game.field.fuel[0]=500
 	game.set_build_menu(true)
 	var building_count: int = game.field.buildings.size()
-	game.recruit_or_build(4)
+	engineer.pos=Vector2(400,1500)
+	game.construct_building(5,0,Vector2(400,1400),engineer)
 	assert(game.field.buildings.size()==building_count+1)
-	assert(game.field.money[0]==850 and game.field.fuel[0]==470)
+	assert(game.field.supply[0]==880 and game.field.fuel[0]==500)
 	assert(not game.has_building(0,5))
-	game.tick_production(13)
+	game.tick_production(30)
 	assert(game.has_building(0,5))
 	game.set_build_menu(false)
 	var tank: CombatUnit = game.spawn(7,0,Vector2(1000,600))

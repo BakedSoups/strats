@@ -1,7 +1,7 @@
 extends SceneTree
 func _initialize() -> void:
 	var root_node: Node2D = Node2D.new()
-	root_node.name = "STRATS"
+	root_node.name = "STRACKS"
 	root_node.set_script(load("res://scripts/game.gd"))
 	var packed: PackedScene = PackedScene.new()
 	assert(packed.pack(root_node) == OK)

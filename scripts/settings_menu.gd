@@ -42,7 +42,7 @@ func _ready() -> void:
 		add_label(frame,GameSettings.ACTION_NAMES[action],Vector2(510,194+row*52),17)
 		var b: Button = add_button(frame,"",Vector2(737,184+row*52),Vector2(185,38))
 		b.pressed.connect(begin_rebind.bind(action)); key_buttons[action]=b; row+=1
-	add_label(frame,"Esc: menu  •  Shift: queue  •  Ctrl + 0–9: groups\nMouse buttons and these modifiers stay reserved.",Vector2(510,568),14,Color("9cb2ac"))
+	add_label(frame,"Esc: menu • Shift: queue • Ctrl + 0–9: groups\nG: grenade • M: mortars (reserved)\nMouse buttons and these modifiers stay reserved.",Vector2(510,568),14,Color("9cb2ac"))
 	note=add_label(frame,"",Vector2(35,681),14,Color("f2ce85"))
 	add_button(frame,"Restore defaults",Vector2(35,720),Vector2(220,34)).pressed.connect(reset_draft)
 	add_button(frame,"Cancel / Back",Vector2(490,720),Vector2(205,34)).pressed.connect(close_menu)

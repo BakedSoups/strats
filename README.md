@@ -1,6 +1,6 @@
-# STRATS — Territory & Steel
+# Stracks — Territory & Steel
 
-A playable single-player tactical RTS for Godot 4.7, written in GDScript. Blue Azure Command fights red Crimson Command on a 2600 × 1800 battlefield. All artwork is generated at runtime from outlined geometric primitives; no external artwork or paid assets are required.
+A playable geometric tactical RTS for Godot 4.7 / GDScript. Blue Azure Command fights red Crimson Command over territory, supply, fuel, and victory points.
 
 ## Run
 
@@ -8,121 +8,143 @@ A playable single-player tactical RTS for Godot 4.7, written in GDScript. Blue A
 ./run.sh
 ```
 
-`run.sh` launches a detached desktop session and writes diagnostic logs to `~/.local/state/strats/`, so closing a tool terminal does not close the game. Running `/usr/local/bin/godot --path .` directly is also supported.
+Click **Deploy / Resume**. The detached launcher keeps the game independent of the tool terminal and writes logs to `~/.local/state/stracks/engine.log`. Direct launch also works: `/usr/local/bin/godot --path .`.
 
-Press **Deploy**. Both factions begin with a mixed force and operational production buildings so the full roster is immediately playable. Capture the three VP rings to drain opposing tickets. Destroying the opposing headquarters also wins.
+## Resource HUD
 
-## Design direction
+Supply, Fuel, and Manpower now have separate icon cards, large values, and distinct accents. Supply/fuel show current gross income per minute; manpower shows used/capacity and free slots, including queued troops. Hover for income sources and deployed/reserved capacity. Victory tickets, VP control, ticket drain, and match time are grouped separately. The reviewed HUD demonstration is `screenshots/resource-hud.mp4`.
 
-See [GDD.md](GDD.md) for the current-state audit and the planned engineer-led builder system, specialized camps and troop unlocks, and resource UI with income, cost previews, spending receipts, and reinforcement controls. The GDD separates existing behavior from proposed rules and balance values.
+When only one friendly base exists, its recruitment roster opens directly in the bottom panel. The bottom controls footer is hidden.
 
-Next work: economy/UI clarity; construction placement and builder attendance; stable building IDs and independent queues; camp progression and forward reinforcement. The builder/camp/economy changes remain planned. Standard settings are implemented; see below.
+Hover near a barricade with infantry selected to preview cover positions and shield markers. Right-click places the selected infantry in the previewed slots. Infantry near cover show a green shield above their health bar; vehicles never receive this indicator or cover protection. Cover still protects only against shots from the opposite side. Reviewed demonstration: `screenshots/cover-preview.mp4`.
 
-## Controls
+## Unit tools
+
+The bottom panel uses contextual tool cards instead of a generic order grid. Engineers have **Build, Repair, Barricade, and Grenade** cards with costs and cooldowns. Build opens illustrated plans with prices and work times. Repair targets a damaged friendly vehicle or completed building and costs no supply. Barricades cost 45 supply, preview before placement, and rotate with Tab. Right-click/Esc cancels targeting. Advanced Tools increases repair and construction speed by 80%. Transports have separate Load and Unload cards; infantry and commanders show their available abilities. Movement, fire-in-range, stop, and retreat remain available through mouse/keyboard controls.
+
+Reviewed 18-second demonstration: `screenshots/unit-tools.mp4`.
+
+## Current opening and resources
+
+Each faction starts with **one HQ and one engineer**, 1,000 supply, 40 fuel, and 500 victory tickets. There are no prebuilt production facilities or free combined-arms armies.
+
+| Resource | Rule |
+|---|---|
+| Supply | Shared currency for recruitment, construction, upgrades, abilities, and HQ recovery. Base +120/min; each supply sector +210/min. |
+| Fuel | Required for heavy/flame tanks, Heavy Workshop research, and tank upgrades. Base +30/min; each oil well +150/min. Other recruits cost zero fuel. |
+| Manpower | Weighted army capacity, displayed as used / 60. Living units and paid recruitment queues reserve capacity; casualties or refunded orders release it. Not a spendable currency. |
+| Victory tickets | Hold more of the three VPs to drain opposing tickets. Zero tickets or HQ destruction loses the match. |
+
+Click HQ to train **engineers** or one unique **commander**. Select an engineer, open **Build**, choose a building, and left-click a valid green footprint. Right-click/Esc cancels placement without spending. Build near your HQ or an owned sector; blocked footprints and objective rings are excluded. Construction requires its engineer nearby; leaving or losing the builder pauses work. Select another engineer and right-click the unfinished site to resume it.
+
+| Facility | Supply | Work time | Roster |
+|---|---:|---:|---|
+| Barracks | 150 | 12s | Riflemen, machine guns, anti-tank squads |
+| Support Works | 180 | 14s | Mortars, AT guns, anti-air |
+| Vehicle Depot | 220 | 16s | Scout cars, light trucks; heavy/flame tanks after research |
+| Helipad | 250 | 18s | Attack and transport helicopters |
+| Emplacement | 120 | 20s | Fixed defensive fire |
+
+A depot's **Heavy Workshop** costs 220 supply / 40 fuel and takes 14 seconds. It unlocks tanks for **that depot**. Research and training share its production slot. Separate producers have independent FIFO queues, progress bars, current/next-unit labels, and correct spawn positions. Destroyed producers refund their queued unit costs; completed buildings cannot be sold.
+
+## Commander and grenades
+
+The commander costs 180 supply and 3 manpower, and is recruited from HQ. Buy **Mortar Support** for 180 supply to unlock targeted bombardment. Additional per-commander upgrades increase damage and blast radius. A barrage costs 80 supply, has an 850-pixel cast range and 45-second cooldown, and drops six visible arcing shells.
+
+Infantry can throw **frag grenades** with the bottom-panel button or **G**: 20 supply, 220-pixel range, 18-second cooldown. Press **M** or the mortar button for a commander barrage. Click to target; right-click/Esc cancels. Costs are deducted only on a valid cast; cooldown and range are enforced. Explosions damage enemy ground units and bypass directional infantry cover. Commander upgrades are lost when that commander dies.
+
+## Controls and settings
 
 | Input | Action |
 |---|---|
-| Arrow keys | Pan camera |
-| Wheel | Zoom |
-| Left click / drag | Select one unit / formation |
-| Shift + select | Add to selection |
-| Right click | Move; click an enemy to engage |
-| Shift + right click | Append waypoint |
-| A | Stop movement and fire at valid enemies in weapon range; no click or pursuit |
-| X | Stop selected formation |
-| R | Retreat and reinforce at HQ |
+| Arrow keys / wheel | Pan / zoom |
+| Left click / drag | Select unit, building, or formation |
+| Empty ground | Commander overview and base cards |
+| Right click | Movement order; enemy targeting; engineer resume-construction |
+| Shift + right click | Queue movement |
+| A | Stop movement and fire at valid enemies already in weapon range; no destination or pursuit |
+| X / R | Stop / retreat |
+| G / M | Target grenade / commander mortar barrage |
 | Ctrl + 0–9 / 0–9 | Assign / recall control group |
-| Minimap click | Reposition camera |
-| Escape | Pause / resume menu |
+| Esc | Cancel targeting/placement, or pause menu |
 
-These are the default bindings. Open **Settings** from the main/pause menu or the top-right button to rebind camera movement, fire-in-range, stop, and retreat. Escape and number-group shortcuts remain reserved. Duplicate bindings are rejected.
+The bottom panel follows commander, base, or unit selection. Base cards include previews, operational state, and roster descriptions. Unit cards show portraits, health, orders, abilities, and individual upgrades. All deployed units have overhead health bars. Only infantry receive barricade protection and Take Cover orders; vehicles use directional armor.
 
-## Built
+Settings are available from the main/pause menu and top-right button: persistent audio bus levels, resolution/fullscreen, camera speed, zoom sensitivity, edge scrolling, and camera/fire/stop/retreat bindings. Audio assets are not implemented. Accessibility settings are outside the requested scope. G and M are reserved for abilities. Existing preferences migrate from the previous game name.
 
-- Infantry rifle squads, machine guns, engineers, anti-tank squads, mortars, AT guns, scout cars, battle tanks, flame tanks, attack helicopters, transport helicopters, and anti-air vehicles.
-- Continuous combat, swept projectile collision against units, arcing mortar shells, explosions, cone flame damage, fading flame particles, burning ground, and damage over time.
-- Directional barricade protection, flanking, frontal/side/rear vehicle armor, suppression, setup delays, firing arcs, ground obstacle detours, separation, and independent aerial movement.
-- Individually controlled helicopters with continuously animated main and tail rotors, shadows, bobbing, patrol ability, attack move, retreat, and transport loading/unloading (up to three nearby squads).
-- Three victory points, four manpower sectors, two oil wells, capture progress and enemy contesting; infantry capture, vehicles cannot. Territorial income, ticket drain, victory and defeat.
-- Headquarters, barracks, support works, vehicle depots, helipads, timed engineer construction, and automatic defensive emplacements. Buildings can be attacked and destroyed.
-- FIFO recruitment per individual production building with costs and timers, production-building prerequisites, correct producer spawn locations, and paid healing/reinforcement near HQ. Orders at destroyed producers are refunded in full.
-- Contextual bottom panel: commander overview when nothing is selected, base recruitment when a building is selected, and unit portraits, orders, upgrades, and health cards when units are selected. Engineers access construction from their unit panel.
-- Seventeen reusable upgrade resources. Costs, stat multipliers, prerequisites, purchased status, and affordability are enforced for both sides. Rocket pods add visible rockets; flame fuel upgrades affect range, burn damage, and sustained firing.
-- Three veterancy levels earned through combat, with reload and survivability bonuses separate from purchased upgrades.
-- Enemy AI captures and contests sectors, recruits combined arms, buys upgrades, uses cover, retreats damaged units, builds defenses, and responds to aircraft with anti-air recruitment.
-- Main menu, pause, minimap, command paths, selection and range outlines, health indicators, resources, match clock, and end screens.
+## Fog, scouting, and transport
 
-## Contextual command panel
+Fog has three states: unexplored shroud, dim explored terrain, and currently visible ground. Living units and completed buildings share sight; owned flags reveal a small area. Neutral buildings block ground sight. Aircraft see over them. Loaded troops and dead units contribute no sight.
 
-Click empty ground for the **Commander** overview and clickable base list. Click a friendly building on the battlefield (or its overview card) for **Base** management: the vehicle depot offers scout cars, battle tanks, and flame tanks; other producers show their own rosters. Clicking a recruitment card spends the shown resources and trains at that specific building. Duplicate producers run independent queues. Destroyed producers cannot spawn units; their queued costs are refunded.
+Enemy units disappear from the battlefield and minimap when no longer spotted. Enemy bases are hidden until seen, then retain only a muted last-known marker; unseen health, production, upgrades, and destruction are not revealed. Auto-fire, indirect targeting, AI artillery/grenade choices, and anti-air recruitment use the same team sight checks. Objective positions/ownership, river banks, and bridge locations remain public strategic information. Area abilities can still be aimed at known terrain without confirming a hidden enemy hit.
 
-Select a unit for its large procedural preview, statistics, commands, upgrades, and a scrolling grid of selected-unit previews with live health bars. Select a card to make that unit active. Only the active unit's attack range is drawn, reducing stacked rings. Every deployed unit now has an overhead health bar, including healthy and unselected units.
+| Early vehicle | Supply / Fuel / Manpower | Role |
+|---|---|---|
+| Scout Car | 200 / 0 / 4 | Armed wheeled recon, speed 175, sight 760; Recon Optics costs 100 supply and extends sight to 950 |
+| Light Truck | 140 / 0 / 3 | Fast unarmed transport, speed 180, sight 380, carries two infantry squads |
 
-**Take cover** applies only to infantry in a mixed selection and is disabled for vehicle-only selections. Barricade damage reduction applies only to infantry; vehicles use directional armor and continue to navigate around physical barricades.
+Both are available at an unupgraded depot. Ordinary infantry sight is around 380–420, so scouts can spot contacts across the estuary for allied weapons. Selected units show their sight statistic; the scout has a sight-range ring. Load/unload with the transport's unit-panel action. Unloaded troops are placed on traversable land or bridge decks. Transport helicopters retain three squad slots and can fly over water. Cargo still counts against manpower. The AI uses scouts and trucks without loading its construction engineer into transports.
 
-## Settings
+## Battlefield and combat
 
-Open **Settings** from the main menu, pause menu (Esc), or top-right battlefield button. The match pauses while settings are open and resumes only if it was running before. **Apply & Save** commits changes; **Cancel / Back** or Esc discards unapplied changes. Restore defaults changes the preview until applied.
+**Estuary Crossing** is a 3200 × 2200 battlefield inspired by the supplied waterfront map, built from procedural geometry rather than copied map imagery. A diagonal estuary separates two street-grid districts. HQs start on opposite banks. The main central bridge carries a victory point; smaller western/eastern bridges provide longer flanking routes. The other victory points lie in plazas on each bank, alongside four supply sectors and two oil wells. Eight neutral building blocks frame the urban streets and waterfront roads.
 
-- Master, music, and effects volume (bus levels are functional; there is no game audio yet).
-- Window resolutions: 1280×800, 1440×900, 1600×900, and 1920×1080; fullscreen/windowed switching. The logical battlefield/UI size remains 1440×900 with aspect-preserving letterboxing.
-- Camera pan speed, zoom sensitivity, and optional edge scrolling at battlefield boundaries.
-- Unique key bindings for camera directions, fire-in-range, stop, and retreat. Defaults are arrow keys / A / X / R, so A engages in-range targets without panning or ordering movement. Untouched older WASD/Q default bindings migrate automatically; custom bindings are preserved. Escape cancels key capture; unsupported or duplicate keys explain their rejection.
-- Preferences persist in Godot's `user://settings.cfg` and survive restarting the game or starting a new operation. Invalid saved values are clamped and invalid binding sets revert to defaults.
+Water blocks ground movement and construction. Cached AStar paths route infantry, scouts, trucks, and tanks through the three bridge decks; aircraft cross freely. Bridges cannot be obstructed by newly placed buildings. Buildings/barricades obstruct ground movement; neutral structures stop direct ground fire while mortars and grenades arc over them. Neutral buildings are not garrisonable or destructible yet.
 
-Accessibility settings are excluded from this milestone. Audio assets, graphical quality presets, and save/load remain future work.
+The roster includes riflemen, MGs, engineers, anti-tank squads, mortars, AT guns, scout cars, light trucks, heavy and flame tanks, attack/transport helicopters, anti-air, and a commander. Combat includes suppression, setup/arcs, directional cover and armor, visible shells/rockets, flame cones, burning ground, three veterancy levels, and twenty-one individual upgrade definitions. The AI builds from HQ, reserves resources for infrastructure, researches tank access, recruits, captures, retreats, upgrades units, and uses abilities under the same costs, caps, and enemy-visibility rules.
 
-## Architecture
-
-| File | Responsibility |
-|---|---|
-| `scripts/unit_portrait.gd` | Procedural infantry, vehicle, helicopter, and building previews for the contextual panel |
-| `scripts/game_settings.gd`, `scripts/settings_menu.gd` | Persistent preferences, display/audio application, input bindings, and modal settings UI |
-| `scripts/unit_spec.gd`, `data/unit_*.tres` | Configurable unit statistics and weapon references |
-| `scripts/weapon_spec.gd`, `data/weapon_*.tres` | Projectile speed, splash, setup, arcs, burning |
-| `scripts/upgrade_spec.gd`, `data/upgrade_*.tres` | Reusable per-unit upgrade definitions and prerequisites |
-| `scripts/unit.gd` | Unit state, queued orders, stats, cargo, upgrades |
-| `scripts/battlefield.gd` | Terrain, sectors, cover, routing, income, queues |
-| `scripts/game.gd` | Combat simulation, strategic AI, input, procedural rendering, and UI integration |
-| `scenes/build.gd` | Build-time main scene generator |
-| `test/simulation.gd` | Deterministic gameplay assertions |
-| `test/presentation.gd` | Deterministic 18-second gameplay presentation |
-
-## Validation and proof
+## Verification and proof
 
 ```bash
 godot --headless --path . --editor --quit
 godot --headless --path . --quit-after 120
+godot --headless --path . --script test/resource_hud.gd
+godot --headless --path . --script test/fog_bridge.gd
+godot --headless --path . --script test/map_placement.gd
+godot --headless --path . --script test/progression.gd
+godot --headless --path . --script test/ai_opening.gd
+godot --headless --path . --script test/ui_clicks.gd
+godot --headless --path . --script test/context_ui.gd
 godot --headless --path . --script test/simulation.gd
 godot --headless --path . --script test/settings.gd
-godot --headless --path . --script test/context_ui.gd
+godot --headless --path . --script test/toolkit.gd
 ```
 
-Simulation assertions cover resource deductions, nonrepeatable upgrades and prerequisites, capture, ticket drain, recruitment, flame cone inclusion/exclusion and burn, transport, building construction, suppression, directional armor, projectile flight layers, 60 seconds of combat/AI, and victory.
+Check logs for `SCRIPT ERROR` or `ERROR`, not just exit status. Tests cover HQ restrictions, construction attendance and placement, producer research/queues, supply/fuel/cap accounting, grenades/barrages and cooldowns, map navigation, real viewport clicks, combat, captures, victory, and settings. `test/fixtures.gd` supplies an explicit combined-arms scenario for older regression tests; it does not change the real opening.
 
-Settings checks additionally cover persistence, corrupt-value validation, binding conflicts, audio mute, apply/cancel/defaults, paused gameplay, and updated command labels/input. `test/display_settings.gd` checks all four resolutions and fullscreen switching in a graphical session. A reviewed 18-second settings demonstration is `screenshots/settings-demo.mp4`.
+The recon 18-second recording is `screenshots/recon-bridge.mp4`, generated by `test/presentation_recon.gd`. It uses a prepared recon patrol on surveyed terrain; normal matches start unexplored outside friendly sight. It shows the bridge layout, scout reveal/retreat, optics, and light-truck delivery. The previous base-building recording is `screenshots/base-building-update.mp4`, generated by `test/presentation_progression.gd`. It shows the HQ opening, construction, commander upgrades, grenades, and a mortar barrage. Older recordings in `screenshots/` show previous iterations.
 
-Context UI checks cover real depot clicks, roster filtering, independent producer queues/spawns, infantry-only cover orders/protection, A stationary engagement, and destroyed-producer refunds. The reviewed 18-second demonstration is `screenshots/context-demo.mp4`.
+## Architecture
 
-The gameplay recording is `screenshots/strats-gameplay.mp4` (18 seconds, 1440 × 900, 30 fps). Its scripted presentation positions existing armies for a skirmish and orders them into battle, purchases a flame range upgrade, switches to a helicopter, and recruits a tank. It uses the same combat simulation as normal play.
+| Source | Responsibility |
+|---|---|
+| `scripts/battlefield.gd` | Map, river/bridges, AStar navigation, resources, buildings, and queues |
+| `scripts/tool_card.gd` | Contextual tool cards and procedural ability icons |
+| `scripts/resource_badge.gd` | Resource-card icons, readable balances, income/capacity details |
+| `scripts/battle_vision.gd` | Team sight, building occlusion, fog texture, explored terrain, and last-known bases |
+| `scripts/unit.gd` | Unit state, orders, cached routes, abilities, cargo, and upgrades |
+| `scripts/unit_spec.gd`, `weapon_spec.gd`, `upgrade_spec.gd` | Reusable combat and upgrade Resources |
+| `scripts/building_spec.gd`, `ability_spec.gd` | Building costs/times and ability definitions |
+| `scripts/game.gd` | Simulation, production/research, AI, contextual UI, input, and procedural world rendering |
+| `scripts/unit_portrait.gd` | Geometric unit and building previews |
+| `scripts/game_settings.gd`, `settings_menu.gd` | Preferences and settings UI |
+| `data/*.tres` | Configurable unit, weapon, upgrade, building, and ability data |
+| `scenes/build.gd` | Validated build-time scene generation |
 
-## Remaining refinements / practical limits
+## Remaining work
 
-This is a compact playable implementation, not a production-scale Company of Heroes simulation. Squads use aggregate health with decorative squad members rather than independently simulated soldiers. Ground routing uses local barricade detours and separation, not a global navigation mesh. AI uses periodic heuristics rather than coordinated tactical planning. Production buildings begin operational; engineers can add more. There is no fog of war, save/load, multiplayer, campaign, or audio. Balance and prolonged-match path congestion need playtesting. The integrated simulation/render/UI script can be split further as the game grows.
+Aggregate squad health remains in use. There is no garrisoning, supply-line connectivity, save/load, multiplayer, campaign, or game audio. Forward camps, queue cancellation, research cancellation/refunds, and detailed economy history remain planned. Population cap is fixed at 60; costs and timings need played-match balance testing. Neutral structures are static, not destructible. The integrated simulation/UI script can be split further as the game grows. See [GDD.md](GDD.md) for the current design.
 
 ## Asset manifest
 
-The asset-gen skill was inspected. Its local generator is not installed; bitmap generation is unnecessary for the requested primitive art. All assets below are generated directly by the runtime renderer, with zero external generation cost.
+All art is procedural runtime geometry; no external artwork or paid generation. The asset-gen skill was inspected; its local generator is unavailable and bitmap assets are unnecessary for this style.
 
-| Name | Description | In-game size | Source | Cost |
+| Asset | Description | In-game size | Source | Cost |
 |---|---|---|---|---|
-| Infantry squads | Outlined circles with gun barrels and two squad markers | ~45 × 45 world px | `scripts/game.gd` | $0 procedural |
-| Ground vehicles | Rectangular hulls, tracks, circular independent turrets | ~84 × 56 world px | `scripts/game.gd` | $0 procedural |
-| Helicopters | Rounded fuselage, cockpit, main/tail rotors and shadow | ~100 × 94 world px rotor span | `scripts/game.gd` | $0 procedural |
-| Battlefield | Muted grid, roads, capture rings, production buildings and barricades | 2600 × 1800 world px | `scripts/game.gd`, `scripts/battlefield.gd` | $0 procedural |
-| Combat effects | Bullets, shells, rockets, flames, impact rings, burning ground | 4–190 world px | `scripts/game.gd` | $0 procedural |
-| Interface and previews | Contextual panels, procedural unit portraits, and built-in font labels | 1440 × 900 viewport | `scripts/game.gd` | $0 procedural |
-
-### Stability fixes
-
-Panel rebuilds remove old controls immediately and defer their destruction until after input dispatch. This avoids deleting a base/unit/upgrade button during its own click signal. `test/ui_clicks.gd` dispatches real viewport mouse events through these transitions and checks repeated base selection; inspect its log for engine/script errors as well as its exit code.
+| Infantry/commander | Circle squads, barrels, gold commander ring | 45–55 world px | `scripts/game.gd` | $0 |
+| Vehicles | Wheeled scouts/trucks, tracked tanks, rotating turrets, flame nozzles | 64–80 world px | `scripts/game.gd` | $0 |
+| Helicopters | Fuselage, animated main/tail rotors, shadow | ~100 world px rotor span | `scripts/game.gd` | $0 |
+| Map | Grid, waterfront streets, estuary, three bridges, neutral blocks, points and cover | 3200 × 2200 world px | `scripts/battlefield.gd`, `scripts/game.gd` | $0 |
+| Bases | Distinct building symbols and construction/training progress | ~100 × 100 world px | `scripts/game.gd` | $0 |
+| Effects | Bullets, shells, grenades, mortar barrages, flames/explosions | 4–190 world px | `scripts/game.gd` | $0 |
+| UI | Contextual base/unit cards, portraits, settings | 1440 × 900 logical viewport | `scripts/game.gd`, `scripts/unit_portrait.gd` | $0 |

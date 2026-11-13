@@ -3,8 +3,8 @@
 [resource]
 script = ExtResource("1")
 title = "Advanced Tools"
-description = "Repair speed × 1.8"
-manpower = 80
+description = "Repair & build speed × 1.8"
+supply = 80
 fuel = 10
 stat = "repair"
 factor = 1.8

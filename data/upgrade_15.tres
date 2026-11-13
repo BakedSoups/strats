@@ -4,7 +4,7 @@
 script = ExtResource("1")
 title = "Reinforced Hull"
 description = "Hp × 1.35"
-manpower = 100
+supply = 100
 fuel = 30
 stat = "hp"
 factor = 1.35
