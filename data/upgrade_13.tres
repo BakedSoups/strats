@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UpgradeSpec" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/upgrade_spec.gd" id="1"]
+[resource]
+script = ExtResource("1")
+title = "Enlarged Fuel Tank"
+description = "Reload × 0.7"
+manpower = 80
+fuel = 20
+stat = "reload"
+factor = 0.7

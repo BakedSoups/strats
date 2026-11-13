@@ -1,0 +1,9 @@
+.agents
+AGENTS.md
+.codex
+godot-gdscript.md
+/tripo-out
+assets
+screenshots
+.godot
+*.import

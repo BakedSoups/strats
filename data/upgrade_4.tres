@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UpgradeSpec" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/upgrade_spec.gd" id="1"]
+[resource]
+script = ExtResource("1")
+title = "Advanced Tools"
+description = "Repair speed × 1.8"
+manpower = 80
+fuel = 10
+stat = "repair"
+factor = 1.8

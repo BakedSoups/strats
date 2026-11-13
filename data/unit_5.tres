@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UnitSpec" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/unit_spec.gd" id="1"]
+[ext_resource type="Resource" path="res://data/weapon_5.tres" id="2"]
+[resource]
+script = ExtResource("1")
+title = "AT Gun"
+hp = 160
+speed = 48
+damage = 85
+reach = 410
+reload = 2.7
+armor = 5
+manpower = 220
+fuel = 30
+flying = false
+infantry = false
+weapon = ExtResource("2")

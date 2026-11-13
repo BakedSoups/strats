@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UnitSpec" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/unit_spec.gd" id="1"]
+[ext_resource type="Resource" path="res://data/weapon_9.tres" id="2"]
+[resource]
+script = ExtResource("1")
+title = "Attack Helicopter"
+hp = 290
+speed = 145
+damage = 22
+reach = 320
+reload = 0.45
+armor = 8
+manpower = 320
+fuel = 100
+flying = true
+infantry = false
+weapon = ExtResource("2")

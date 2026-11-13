@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UpgradeSpec" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/upgrade_spec.gd" id="1"]
+[resource]
+script = ExtResource("1")
+title = "Pressurized Fuel"
+description = "Reach × 1.4"
+manpower = 90
+fuel = 25
+stat = "reach"
+factor = 1.4

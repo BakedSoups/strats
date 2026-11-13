@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="UpgradeSpec" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/upgrade_spec.gd" id="1"]
+[resource]
+script = ExtResource("1")
+title = "Rocket Pods"
+description = "Damage × 1.8"
+manpower = 140
+fuel = 40
+stat = "damage"
+factor = 1.8
+prerequisite = -1
+building = 4

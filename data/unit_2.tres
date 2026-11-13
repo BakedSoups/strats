@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UnitSpec" load_steps=3 format=3]
+[ext_resource type="Script" path="res://scripts/unit_spec.gd" id="1"]
+[ext_resource type="Resource" path="res://data/weapon_2.tres" id="2"]
+[resource]
+script = ExtResource("1")
+title = "Engineers"
+hp = 100
+speed = 100
+damage = 8
+reach = 185
+reload = 0.7
+armor = 0
+manpower = 110
+fuel = 0
+flying = false
+infantry = true
+weapon = ExtResource("2")
